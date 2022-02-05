@@ -3,6 +3,20 @@ uuid = "ff112cfb-825c-447f-968b-0dd38ca23c0c"
 authors = ["Colin Summers <me@colinxsummers.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+Artifacts = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+InteractModels = "546b680c-e627-4c75-86f8-7ef2c81e5d51"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+LibGit2 = "76f85450-5226-5b5a-8eaa-529ad045b433"
+NamedTupleTools = "d9ec5142-1e00-5aa0-9d6a-321866360f50"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
+StructTypes = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
+TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
+
 [compat]
 julia = "1.7"
 
