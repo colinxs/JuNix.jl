@@ -1,0 +1,13 @@
+name = "JuNix"
+uuid = "ff112cfb-825c-447f-968b-0dd38ca23c0c"
+authors = ["Colin Summers <me@colinxsummers.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.7"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
