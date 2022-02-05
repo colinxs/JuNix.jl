@@ -15,25 +15,25 @@
     let
       name = "JuNix";
 
-      systemOutputs = flake-utils.lib.eachSystem nix-home.lib.defaultSystems (system:
+      outputs = { };
+
+      systemOutputs = flake-utils.lib.eachDefaultSystem (system:
         let
           dev = nix-home.lib;
           pkgs = nix-home.legacyPackages."${system}";
           inherit (pkgs) mur;
           inherit (mur) julia buildJuliaApplication;
 
-          julia-wrapped = mur.buildJuliaWrapper {
-          };
-
-          junix = {
-          };
+          buildJuliaDepot = pkgs.pkgsUnstable.callPackage ./buildJuliaDepot.nix { };
+          depot = buildJuliaDepot { depotFile = ./Depot.json; };
         in
-        rec {
+        {
           legacyPackages = {
+            inherit depot;
           };
 
-          defaultApp = apps."junix";
-          apps."junix" = flake-utils.lib.mkApp { drv = junix; };
+          # defaultApp = apps."junix";
+          # apps."junix" = flake-utils.lib.mkApp { drv = junix; };
 
           devShell = pkgs.mkShell {
             buildInputs = with pkgs; [

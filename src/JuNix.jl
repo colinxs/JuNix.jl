@@ -21,7 +21,6 @@ using Downloads: download
 
 
 include("types.jl")
-include("fetch.jl")
 include("api.jl")
 
 const GENERATED_FILENAME = "Depot.nix"
@@ -200,14 +199,15 @@ function resolve_depot(depot::Depot, ctx::Context)
             for i=1:length(to_download)
                 job, res = take!(results)
                 bar.current = i
-                fancyprint && print_progress_bottom(ctx.io)
+                # fancyprint && print_progress_bottom(ctx.io)
                 res isa Exception && @error "Error downloading $(job.name) $(job.tree_hash)" exception=res 
-                entry = res isa Archive ? (;res.url, res.sha256) : (;res.url)
+                sha256 = res.sha256 === nothing ? nothing : to_nixhash(res.sha256)
+                entry = res isa Archive ? (;type="archive", res.url, sha256, origsha256=res.sha256) : (;type="git", res.url, res.tree_hash)
                 if job isa PackageInfo
-                    entry = merge(entry, (;job.name, job.tree_hash, job.uuid , job.version))
+                    entry = merge(entry, (;job.name, job.uuid , job.version))
                     resolved.packages[job.depot_path] = entry
                 elseif job isa Artifact 
-                    entry = merge(entry, (;job.name, job.tree_hash, job.lazy, job.arch, job.os, job.libc, job.libstdcxx_version, job.cxxstring_abi, job.julia_version))
+                    entry = merge(entry, (;job.name, job.lazy, job.arch, job.os, job.libc, job.libstdcxx_version, job.cxxstring_abi, job.julia_version))
                     resolved.artifacts[job.depot_path] = entry
                 end
                 fancyprint && show_progress(ctx.io, bar)
@@ -225,8 +225,10 @@ function resolve_archive!(archives::Vector{Archive})
     for archive in archives
         io = IOBuffer()
         try
-            download(archive.url, io)
-            archive.sha256 === nothing && (archive.sha256 = bytes2hex(sha256(io)))
+            # download(archive.url, io)
+            # archive.sha256 === nothing && (archive.sha256 = bytes2hex(sha256(io)))
+            file = download(archive.url)
+            archive.sha256 === nothing && (archive.sha256 = nix_hashfile(file)) 
             return archive
         catch e
             e isa InterruptException ? rethrow() : push!(errors, e)
@@ -234,6 +236,14 @@ function resolve_archive!(archives::Vector{Archive})
         end
     end
     return CompositeException(errors)
+end
+
+function to_nixhash(hash::String, type="sha256")
+    read(`nix hash to-sri --type sha256 $hash`, String)
+end
+
+function nix_hashfile(path::String)
+    read(`nix hash file --sri $path`, String)
 end
 
 end # module

@@ -27,8 +27,6 @@ function generate(
             JSON3.write(io_out, depot)
         end
     end
-
-    return pkgs 
 end
 
 function printtypes(x::AbstractDict, indent="")
