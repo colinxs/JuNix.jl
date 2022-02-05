@@ -53,21 +53,21 @@ let
               cp -r "$src" "$renamed"
               unpackFile "$renamed"
               chmod -R +w "$unpackDir"
-
-              mv "$unpackDir" "$out"
-              
-              exit
             '';
             installPhase = ''
-              run preInstall
+              runHook preInstall
 
               # mkdir -p "$out/${path}"
               # mv ./* "$out/${path}"
-              mkdir $out
+              # mkdir $out
               # mv ./* $out
-              cp -r . $out
+              # cp -r . $out
+              mkdir -p "$out/$(dirname "${path}")"
+              mv "$unpackDir" "$out/${path}"
 
-              run postInstall
+              
+
+              runHook postInstall
             '';
           }
         )
