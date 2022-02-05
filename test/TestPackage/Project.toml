@@ -1,0 +1,8 @@
+name = "TestPackage"
+uuid = "5efcbd0f-e242-4db3-bdc5-af98f9e9d690"
+authors = ["Colin Summers <me@colinxsummers.com>"]
+version = "0.1.0"
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
